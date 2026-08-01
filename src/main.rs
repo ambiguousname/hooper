@@ -1,6 +1,6 @@
-use std::{collections::HashMap, net::{Ipv4Addr, SocketAddr, SocketAddrV4}, str::FromStr, sync::{Arc, LazyLock, Once, OnceLock, RwLock}};
+use std::{net::{Ipv4Addr, SocketAddr}, str::FromStr, sync::{Arc, LazyLock}};
 use http_body_util::Full;
-use hyper::{HeaderMap, Method, Request, Response, StatusCode, Uri, body::{Bytes, Incoming}, header::{HeaderValue, LOCATION, REFERER}, service::service_fn};
+use hyper::{Method, Request, Response, StatusCode, Uri, body::{Bytes, Incoming}, header::{HeaderValue, LOCATION, REFERER}, service::service_fn};
 use hyper_util::{rt::{TokioExecutor, TokioIo}, server::conn::auto::Builder};
 use tokio::net::TcpListener;
 
@@ -104,7 +104,7 @@ fn get_members() -> Result<Vec<Member>, String> {
 	let mut members = vec![];
 	for (idx, member) in members_txt.lines().enumerate() {
 		let uri = Uri::from_str(member).map_err(|e| {
-			format!("Could not parse member URI: {}", e.to_string())
+			format!("Could not parse member URI: {}", e)
 		})?;
 		members.push(Member {
 			idx,
