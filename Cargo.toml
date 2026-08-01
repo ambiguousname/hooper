@@ -1,0 +1,19 @@
+[package]
+name = "ambiguousring"
+description = "Simple Rust Webring server"
+edition = "2024"
+publish = false
+
+[dependencies]
+clap = { version = "4.6.5", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+tokio-rustls = "0.26"
+hyper = { version = "1", features = ["full"] }
+hyper-util = { version = "0.1", features = ["full"] }
+hyper-rustls = "0.27.9"
+rustls = "0.23.43"
+http-body-util = "0.1"
+rand = "0.10"
+
+[build-dependencies]
+cargo-bundle-licenses = "4.2.0"

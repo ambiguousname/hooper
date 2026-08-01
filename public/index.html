@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>UCSC Gamedev Webring</title>
+	</head>
+	<body>
+		<h1>The UCSC Gamedev Webring</h1>
+
+		<p>If you meet the criteria and want to be added to the ring, email me: <code>ambiguousname (at) ambiguous (dot) name </code> </p>
+		<p>View the <a href="./members.txt">list of members</a>.</p>
+		<h2>Criteria</h2>
+		<ol>
+			<li>You must be attending or have attended UC Santa Cruz</li>
+			<li>You must include the webring buttons somewhere on the URL you provide</li>
+		</ol>
+		Criteria is subject to change.
+		<h2>Linking to the Webring</h2>
+		<p>Use these buttons:</p>
+		<a href="https://ring.ambiguous.name/left">Previous</a> <a href="https://ring.ambiguous.name/random">Random</a> <a href="https://ring.ambiguous.name/right">Next</a>
+
+		<p>HTML Source:</p>
+		<code>
+			&lt;a href="https://ring.ambiguous.name/left"&gt;Previous&lt;/a&gt;
+			&lt;a href="https://ring.ambiguous.name/random"&gt;Random&lt;/a&gt;
+			&lt;a href="https://ring.ambiguous.name/right"&gt;Next&lt;/a&gt;
+		</code>
+
+		<h2>Technical Notes</h2>
+		<p>Created and maintained by <a href="https://ambiguous.name/">ambiguousname</a></p>
+		<p>View the <a href="">source code online</a>, under MIT License (TODO)</p>
+		<p>The server's HTTPS/TLS Handshake details were based heavily on <a href="https://github.com/rustls/hyper-rustls/blob/main/examples/server.rs">hyper-rustls' sample server</a>. You may find its license (and other related licenses) below.</p>
+		<p>Some implementation details were inspired by <a href="https://codeberg.org/liampas/ring">Mudring by liampas</a>.</p>
+		The links rely on the <code>referer</code> header from your browser, so <code>rel="noreferrer"</code> should be disabled for these links. Otherwise, the buttons will randomly link to a different website each time.
+
+		<h3>Server Licenses</h3>
+		<a href="LICENSES.md">JSON list of licenses</a>
+	</body>
+</html>
