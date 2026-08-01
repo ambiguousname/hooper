@@ -72,33 +72,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>{
 }
 
 fn read_from_public(path : &str) -> Result<Option<String>, String> {
-	// TODO: Cache updates?
-	static CACHE : LazyLock<RwLock<HashMap<String, String>>> = LazyLock::new(|| {
-		RwLock::new(HashMap::new())
-	});
-
-	let read = CACHE.read().map_err(|e| {
-		format!("Could not read from cache: {e}")
-	})?;
-
-	if let Some(k) = read.get(path) {
-		Ok(Some(k.clone()))
-	} else {
-		let to_read = std::path::Path::new(path);
-		if let Some(f) = to_read.file_name() {
-			let base = std::path::Path::new("./public");
-			let pth = base.join(f);
-			if pth.exists() {
-				let file = std::fs::read_to_string(base.join(f)).map_err(|e| {
-					e.to_string()
-				})?;
-				Ok(Some(file))
-			} else {
-				Ok(None)
-			}
+	let to_read = std::path::Path::new(path);
+	if let Some(f) = to_read.file_name() {
+		let base = std::path::Path::new("./public");
+		let pth = base.join(f);
+		if pth.exists() {
+			let file = std::fs::read_to_string(base.join(f)).map_err(|e| {
+				e.to_string()
+			})?;
+			Ok(Some(file))
 		} else {
 			Ok(None)
 		}
+	} else {
+		Ok(None)
 	}
 }
 
