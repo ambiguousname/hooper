@@ -3,3 +3,7 @@ public/LICENSES.md
 
 # Rust target:
 target
+
+# Cryptography:
+*.rsa
+*.pem
