@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<script>
+		async function drawMembers() {
+			let membersTxt = await fetch("./members.txt");
+			let membersElem = document.getElementById("members");
+			let membersRes = await membersTxt.text();
+			let members = membersRes.split("\n");
+			for (let member of members) {
+				let li = document.createElement("li");
+				li.innerHTML = `<a href=${member}>${member}</a>`;
+				membersElem.append(li);
+			}
+		}
+		drawMembers();
+	</script>
+	<body>
+		<h1>UCSC Gamedev Webring Members</h1>
+		<p><a href="index.html">Home</a></p>
+		<p>Based on this <a href="members.txt">text list of members</a>.</p>
+		<ul id="members">
+
+		</ul>
+	</body>
+</html>

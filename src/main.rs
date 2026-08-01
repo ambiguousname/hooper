@@ -188,6 +188,9 @@ async fn ring_service(req : Request<Incoming>) -> Result<Response<Full<Bytes>>, 
 		"/rand" | "/random" => {
 			Some(format!("Redirecting to {}", redirect_random(&mut response)?.url))
 		}
+		"/members" => {
+			read_from_public("members.html")?
+		}
 		path => {
 			read_from_public(path)?
 		}
