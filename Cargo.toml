@@ -1,5 +1,5 @@
 [package]
-name = "ambiguousring"
+name = "hooper"
 description = "Simple Rust Webring server"
 edition = "2024"
 publish = false
