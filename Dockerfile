@@ -36,7 +36,7 @@ WORKDIR /app
 
 COPY --from=build /bin/server /bin/
 
-COPY ./public /app/public
+ADD ./public /app/public
 
 EXPOSE ${PORT}
 
