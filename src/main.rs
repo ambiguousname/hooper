@@ -36,7 +36,11 @@ struct RingCli {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = RingCli::parse();
-    let port = args.port.unwrap_or(8080);
+    let port_env = std::env::var("PORT").ok().as_ref().and_then(|v| {
+        u16::from_str(v).ok()
+    });
+    let port_int = port_env.unwrap_or(8080);
+    let port = args.port.unwrap_or(port_int);
     let localhost_addr = SocketAddr::new(Ipv4Addr::LOCALHOST.into(), port);
     let network_addr = SocketAddr::new(local_ip()?, port);
 
