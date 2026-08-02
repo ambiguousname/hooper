@@ -50,7 +50,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     let incoming_localhost = TcpListener::bind(localhost_addr).await?;
-    let mutincoming_network = TcpListener::bind(network_addr).await?;
+    let incoming_network = TcpListener::bind(network_addr).await?;
     println!("Available on:");
     println!("{localhost_addr}");
     println!("{network_addr}");
