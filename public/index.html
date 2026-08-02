@@ -28,7 +28,7 @@
 		<h2>Technical Notes</h2>
 		<p>Created and maintained by <a href="https://ambiguous.name/">ambiguousname</a></p>
 		<p>View the <a href="https://github.com/ambiguousname/hooper">source code online</a>, under MIT License</p>
-		<p>The server's HTTPS/TLS Handshake details were based heavily on <a href="https://github.com/rustls/hyper-rustls/blob/main/examples/server.rs">hyper-rustls' sample server</a>. You may find its license (and other related licenses) below.</p>
+		<p>The server theoretically supports an HTTPS/TLS handshake for direct publishing (based on <a href="https://github.com/rustls/hyper-rustls/blob/main/examples/server.rs">hyper-rustls' sample server</a>), but the server itself just currently runs as HTTP on my Raspberry Pi through a <a href="https://developers.cloudflare.com/tunnel/">Cloudflared tunnel</a>.</p>
 		<p>Some implementation details were inspired by <a href="https://codeberg.org/liampas/ring">Mudring by liampas</a>.</p>
 		The links rely on the <code>referer</code> header from your browser, so <code>rel="noreferrer"</code> should be disabled for these links. If you want to sidestep this issue, you can use a query string:
 		<code>https://ring.ambiguous.name/left?member=mywebsite.com</code>
