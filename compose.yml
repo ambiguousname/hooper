@@ -7,5 +7,6 @@ services:
       - type: bind
         source: ./public
         target: /app/public
+    restart: always
 volumes:
   public:
