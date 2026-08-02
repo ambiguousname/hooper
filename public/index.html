@@ -30,7 +30,10 @@
 		<p>View the <a href="https://github.com/ambiguousname/hooper">source code online</a>, under MIT License</p>
 		<p>The server's HTTPS/TLS Handshake details were based heavily on <a href="https://github.com/rustls/hyper-rustls/blob/main/examples/server.rs">hyper-rustls' sample server</a>. You may find its license (and other related licenses) below.</p>
 		<p>Some implementation details were inspired by <a href="https://codeberg.org/liampas/ring">Mudring by liampas</a>.</p>
-		The links rely on the <code>referer</code> header from your browser, so <code>rel="noreferrer"</code> should be disabled for these links. Otherwise, the buttons will randomly link to a different website each time.
+		The links rely on the <code>referer</code> header from your browser, so <code>rel="noreferrer"</code> should be disabled for these links. If you want to sidestep this issue, you can use a query string:
+		<code>https://ring.ambiguous.name/left?member=mywebsite.com</code>
+
+		<p><code>?member=somesite.com</code> indicates which site you're linking from, and so the server will use that instead of the <code>Referer</code> header.</p>
 
 		<h3>Server Licenses</h3>
 		<a href="LICENSES.md">List of licenses</a>

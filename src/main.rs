@@ -167,14 +167,11 @@ fn redirect_random<T>(response: &mut Response<T>) -> Result<&Member, String> {
 }
 
 fn redirect_from_referer<T>(
-    referer: Option<&HeaderValue>,
+    referer: Option<Uri>,
     add: isize,
     response: &mut Response<T>,
 ) -> Result<String, String> {
-    let new_member = if let Some(r) = referer {
-        let url_st = r.to_str().map_err(|e| e.to_string())?;
-        let uri = Uri::from_str(url_st).map_err(|e| e.to_string())?;
-
+    let new_member = if let Some(uri) = referer {
         let member = MEMBERS
             .iter()
             .find(|member| member.url.authority() == uri.authority());
@@ -190,6 +187,41 @@ fn redirect_from_referer<T>(
     Ok(format!("Redirecting to {}", new_member.url))
 }
 
+fn referer_from_request(req : &Request<Incoming>) -> Result<Option<Uri>, String> {
+    // If we have ?member=site.origin, then we don't need to read the referer header.
+    let referer_explicit = req.uri().query().and_then(|st| {
+        let params = st.split("&");
+        for p in params {
+            if let Some(referer) = p.strip_prefix("member=") {
+                return Some(referer);
+            }
+        }
+        None
+    });
+    
+    if let Some(e) = referer_explicit {
+        // Ignore if the query is invalid, the user won't be able to adjust the link.
+        if let Ok(st) = Uri::from_str(e) {
+            return Ok(Some(st));
+        }
+    }
+    
+    // Note that generally the Referer header is not included if we're not in an HTTPS->HTTPS context: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Referrer-Policy#strict-origin-when-cross-origin_2
+    let referer_implicit = req.headers().get(REFERER);
+    if let Some(v) = referer_implicit {
+        let st = v.to_str().map_err(|e| {
+            e.to_string()
+        })?;
+        Uri::from_str(st).map(|s| {
+            Some(s)
+        }).map_err(|e| {
+            e.to_string()
+        })
+    } else {
+        Ok(None)
+    }
+}
+
 async fn ring_service(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, String> {
     let mut response = Response::new(Full::default());
     // We only support GET methods.
@@ -197,15 +229,14 @@ async fn ring_service(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, S
         *response.status_mut() = StatusCode::METHOD_NOT_ALLOWED;
         return Ok(response);
     }
-    let content = match req.uri().path() {
+    let uri = req.uri();
+    let content = match uri.path() {
         "/" => read_from_public("index.html")?,
         "/left" | "/prev" | "/previous" => {
-            let referer = req.headers().get(REFERER);
-            Some(redirect_from_referer(referer, -1, &mut response)?)
+            Some(redirect_from_referer(referer_from_request(&req)?, -1, &mut response)?)
         }
         "/right" | "/next" => {
-            let referer = req.headers().get(REFERER);
-            Some(redirect_from_referer(referer, 1, &mut response)?)
+            Some(redirect_from_referer(referer_from_request(&req)?, 1, &mut response)?)
         }
         "/rand" | "/random" => Some(format!(
             "Redirecting to {}",
