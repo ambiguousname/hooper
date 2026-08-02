@@ -10,9 +10,7 @@ use hyper_util::{
     server::conn::auto::Builder,
 };
 use std::{
-    net::{Ipv4Addr, SocketAddr},
-    str::FromStr,
-    sync::{Arc, LazyLock},
+    future::poll_fn, net::{Ipv4Addr, SocketAddr}, str::FromStr, sync::{Arc, LazyLock}, task::Poll,
 };
 use tokio::net::TcpListener;
 
@@ -22,6 +20,8 @@ use rustls::{
     pki_types::{CertificateDer, PrivateKeyDer, pem::PemObject},
 };
 use tokio_rustls::TlsAcceptor;
+
+use local_ip_address::local_ip;
 
 #[derive(Parser)]
 struct RingCli {
@@ -37,7 +37,8 @@ struct RingCli {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = RingCli::parse();
     let port = args.port.unwrap_or(8080);
-    let addr = SocketAddr::new(Ipv4Addr::LOCALHOST.into(), port);
+    let localhost_addr = SocketAddr::new(Ipv4Addr::LOCALHOST.into(), port);
+    let network_addr = SocketAddr::new(local_ip()?, port);
 
     let cert_info = if let Some(c) = args.cert {
         let certs =
@@ -48,7 +49,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         None
     };
 
-    let incoming = TcpListener::bind(addr).await?;
+    let incoming_localhost = TcpListener::bind(localhost_addr).await?;
+    let mutincoming_network = TcpListener::bind(network_addr).await?;
+    println!("Available on:");
+    println!("{localhost_addr}");
+    println!("{network_addr}");
 
     let tls_acceptor = if let Some((certs, key)) = cert_info {
         let mut server_config = ServerConfig::builder()
@@ -64,7 +69,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let service = service_fn(ring_service);
 
     loop {
-        let (tcp_stream, _) = incoming.accept().await?;
+        let (tcp_stream, _) = poll_fn(|ctx| {
+            let network_poll = incoming_network.poll_accept(ctx);
+            let local_poll = incoming_localhost.poll_accept(ctx);
+            if let Poll::Ready(res) = local_poll {
+                return Poll::Ready(res);
+            }
+            if let Poll::Ready(res) = network_poll {
+                return Poll::Ready(res);
+            }
+            Poll::Pending
+        }).await?;
 
         let tls_acceptor = tls_acceptor.clone();
         tokio::spawn(async move {
