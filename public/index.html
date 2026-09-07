@@ -2,6 +2,34 @@
 <html>
 	<head>
 		<title>UCSC Gamedev Webring</title>
+		<style>
+			body {
+				background-color: #dedede;
+				color: #121212;
+			}
+			body p {
+				padding-left: 10px;
+			}
+			a {
+				color: #006aad;
+				display: inline-block;
+				transition-duration: 0.2s;
+			}
+			a:visited  {
+				color: #da216d;
+			}
+
+			a:hover:nth-child(even),a:focus:nth-child(even) {
+				rotate: 0.5deg;
+			}
+
+			a:hover:nth-child(odd),a:focus:nth-child(odd) {
+				rotate: -0.5deg;
+			}
+			code {
+				color: #007988;
+			}
+		</style>
 	</head>
 	<body>
 		<h1>The UCSC Gamedev Webring</h1>
@@ -13,7 +41,7 @@
 			<li>You must be attending or have attended UC Santa Cruz</li>
 			<li>You must include the webring buttons somewhere on the URL you provide</li>
 		</ol>
-		Criteria is subject to change.
+		<p>Criteria is subject to change.</p>
 		<h2>Linking to the Webring</h2>
 		<p>Use these buttons:</p>
 		<a href="https://ring.ambiguous.name/left"><img src="./slug_backward_med_res.png" alt="Previous"/></a> <a href="https://ring.ambiguous.name/random"><img src="./slug_random_med_res.png" alt="Random"/></a> <a href="https://ring.ambiguous.name/right"><img src="./slug_forward_med_res.png" alt="Next"/></a>
@@ -28,7 +56,7 @@
 		</code>
 
 		<h3>Button Variants</h3>
-		Feel free to use any of these button variants (most are in 88 x 31 resolution):
+		<p>Feel free to use any of these button variants (most are in 88 x 31 resolution):</p>
 
 		<h4>High Res (1760 x 620)</h4>
 		<img src="./slug_backward_high_res.png" alt="Previous" style="width: 32vw;"/>
@@ -55,12 +83,12 @@
 		<p>View the <a href="https://github.com/ambiguousname/hooper">source code online</a>, under MIT License</p>
 		<p>The server theoretically supports an HTTPS/TLS handshake for direct publishing (based on <a href="https://github.com/rustls/hyper-rustls/blob/main/examples/server.rs">hyper-rustls' sample server</a>), but the server itself just currently runs as HTTP on my Raspberry Pi through a <a href="https://developers.cloudflare.com/tunnel/">Cloudflared tunnel</a>. That also means I don't have to implement the hard stuff like caching.</p>
 		<p>Some implementation details were inspired by <a href="https://codeberg.org/liampas/ring">Mudring by liampas</a>.</p>
-		The links rely on the <code>referer</code> header from your browser, so <code>rel="noreferrer"</code> should be disabled for these links. If you want to sidestep this issue, you can use a query string:
+		<p>The links rely on the <code>referer</code> header from your browser, so <code>rel="noreferrer"</code> should be disabled for these links. If you want to sidestep this issue, you can use a query string:</p>
 		<code>https://ring.ambiguous.name/left?member=mywebsite.com</code>
 
 		<p><code>?member=somesite.com</code> indicates which site you're linking from, and so the server will use that instead of the <code>Referer</code> header.</p>
 
 		<h3>Server Licenses</h3>
-		<a href="LICENSES.md">List of licenses</a>
+		<p><a href="LICENSES.md">List of licenses</a></p>
 	</body>
 </html>
