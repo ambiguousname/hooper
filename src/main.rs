@@ -113,13 +113,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 }
 
-fn read_from_public(path: &str) -> Result<Option<String>, String> {
+fn read_from_public(path: &str) -> Result<Option<Vec<u8>>, String> {
     let to_read = std::path::Path::new(path);
     if let Some(f) = to_read.file_name() {
         let base = std::path::Path::new("./public");
         let pth = base.join(f);
         if pth.exists() {
-            let file = std::fs::read_to_string(base.join(f)).map_err(|e| e.to_string())?;
+            let file = std::fs::read(base.join(f)).map_err(|e| e.to_string())?;
             Ok(Some(file))
         } else {
             Ok(None)
@@ -141,7 +141,9 @@ static MEMBERS: LazyLock<Vec<Member>> =
 fn get_members() -> Result<Vec<Member>, String> {
     let members_txt = read_from_public("members.txt")?.expect("members.txt does not exist.");
     let mut members = vec![];
-    for (idx, member) in members_txt.lines().enumerate() {
+    for (idx, member) in String::from_utf8(members_txt).map_err(|e| {
+        format!("Could not read members to UTF8: {e:?}")
+    })?.lines().enumerate() {
         let uri =
             Uri::from_str(member).map_err(|e| format!("Could not parse member URI: {}", e))?;
         members.push(Member { idx, url: uri });
@@ -170,7 +172,7 @@ fn redirect_from_referer<T>(
     referer: Option<Uri>,
     add: isize,
     response: &mut Response<T>,
-) -> Result<String, String> {
+) -> Result<Vec<u8>, String> {
     let new_member = if let Some(uri) = referer {
         let member = MEMBERS
             .iter()
@@ -184,7 +186,7 @@ fn redirect_from_referer<T>(
     } else {
         redirect_random(response)?
     };
-    Ok(format!("Redirecting to {}", new_member.url))
+    Ok(format!("Redirecting to {}", new_member.url).into())
 }
 
 fn referer_from_request(req : &Request<Incoming>) -> Result<Option<Uri>, String> {
@@ -241,7 +243,7 @@ async fn ring_service(req: Request<Incoming>) -> Result<Response<Full<Bytes>>, S
         "/rand" | "/random" => Some(format!(
             "Redirecting to {}",
             redirect_random(&mut response)?.url
-        )),
+        ).into()),
         "/members" => read_from_public("members.html")?,
         path => read_from_public(path)?,
     };
