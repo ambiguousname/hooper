@@ -179,7 +179,11 @@ fn redirect_from_referer<T>(
             .find(|member| member.url.authority() == uri.authority());
 
         if let Some(m) = member {
-            redirect_to_member(m.idx.wrapping_add_signed(add), response)?
+            if m.idx == 0 {
+                redirect_to_member(MEMBERS.len() - 1, response)?
+            } else {
+                redirect_to_member(m.idx.wrapping_add_signed(add), response)?
+            }
         } else {
             redirect_random(response)?
         }
