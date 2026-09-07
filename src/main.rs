@@ -179,8 +179,9 @@ fn redirect_from_referer<T>(
             .find(|member| member.url.authority() == uri.authority());
 
         if let Some(m) = member {
-            if m.idx == 0 {
-                redirect_to_member(MEMBERS.len() - 1, response)?
+            // Do we wrap back to the beginning?
+            if add.is_negative() && (m.idx.checked_add_signed(add).is_none()) {
+                redirect_to_member(MEMBERS.len().wrapping_add_signed(add), response)?
             } else {
                 redirect_to_member(m.idx.wrapping_add_signed(add), response)?
             }
