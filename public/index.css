@@ -1,0 +1,26 @@
+body {
+	background-color: #dedede;
+	color: #121212;
+}
+body p {
+	padding-left: 10px;
+}
+a {
+	color: #006aad;
+	display: inline-block;
+	transition-duration: 0.2s;
+}
+a:visited  {
+	color: #da216d;
+}
+
+a:hover:nth-child(even),a:focus:nth-child(even) {
+	rotate: 0.5deg;
+}
+
+a:hover:nth-child(odd),a:focus:nth-child(odd) {
+	rotate: -0.5deg;
+}
+code {
+	color: #007988;
+}
