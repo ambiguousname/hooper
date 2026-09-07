@@ -7,19 +7,23 @@ body p {
 }
 a {
 	color: #006aad;
-	display: inline-block;
 	transition-duration: 0.2s;
 }
+
 a:visited  {
 	color: #da216d;
 }
 
-a:hover:nth-child(even),a:focus:nth-child(even) {
-	rotate: 0.5deg;
+img {
+	transition-duration: 0.2s;
 }
 
-a:hover:nth-child(odd),a:focus:nth-child(odd) {
-	rotate: -0.5deg;
+img.even:hover {
+	transform: rotate(0.5deg);
+}
+
+img.odd:hover {
+	transform: rotate(-0.5deg);
 }
 code {
 	color: #007988;
