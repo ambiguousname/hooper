@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<link rel="stylesheet" href="index.css"/>
-	<script>
-		async function drawMembers() {
-			let membersTxt = await fetch("./members.txt");
-			let membersElem = document.getElementById("members");
-			let membersRes = await membersTxt.text();
-			let members = membersRes.split("\n");
-			for (let member of members) {
-				let li = document.createElement("li");
-				li.innerHTML = `<a href=${member}>${member}</a>`;
-				membersElem.append(li);
+		<link rel="stylesheet" href="index.css"/>
+		<meta charset="utf-8"/>
+		<!-- Pure meta: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta -->
+		<meta name="description" content="The Unofficial Webring for UCSC Game Developers (Alumni and Current)">
+		<meta name="image" content="https://ring.ambiguous.name/slug_random_high_res_textless.png">
+		<meta name="author" content="ambiguousname">
+		<link rel="icon" href="./slug_random_lo_res_textless.png"/>
+		<title>UCSC Game Dev Webring Members</title>
+		<script>
+			async function drawMembers() {
+				let membersTxt = await fetch("./members.txt");
+				let membersElem = document.getElementById("members");
+				let membersRes = await membersTxt.text();
+				let members = membersRes.split("\n");
+				for (let member of members) {
+					let li = document.createElement("li");
+					li.innerHTML = `<a href=${member}>${member}</a>`;
+					membersElem.append(li);
+				}
 			}
-		}
-		drawMembers();
-	</script>
+			drawMembers();
+		</script>
 	</head>
 	<body>
-		<h1>UCSC Gamedev Webring Members</h1>
+		<h1>The Unofficial UCSC Gamedev Webring's List of Members</h1>
 		<p><a href="index.html">Home</a></p>
 		<p>Based on this <a href="members.txt">text list of members</a>.</p>
 		<ul id="members">
